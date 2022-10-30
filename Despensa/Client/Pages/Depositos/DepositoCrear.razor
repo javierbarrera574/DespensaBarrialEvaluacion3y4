@@ -1,0 +1,27 @@
+﻿@page "/Depositos/Crear"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Nueva deposito</h3>
+
+<FormDeposito deposito="deposito" onCancel="Cancelar" onValidSubmit="Grabar" />
+
+
+@code {
+    private Deposito deposito = new Deposito();
+
+    private async void Grabar()
+    {
+        var httpRespuesta = await http.Post<Deposito>("api/Depositos", deposito);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        navigationManager.NavigateTo("/Depositos");
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Depositos");
+    }
+}

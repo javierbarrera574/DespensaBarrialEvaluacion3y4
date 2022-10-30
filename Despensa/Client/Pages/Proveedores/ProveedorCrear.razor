@@ -1,0 +1,27 @@
+﻿@page "/Proveedores/Crear"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Nuevo proveedor</h3>
+
+<FormProveedor proveedor="proveedor" onCancel="Cancelar" onValidSubmit="Grabar" />
+
+
+@code {
+    private Proveedor proveedor = new Proveedor();
+
+    private async void Grabar()
+    {
+        var httpRespuesta = await http.Post<Proveedor>("api/Proveedores", proveedor);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        navigationManager.NavigateTo("/Proveedores");
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Proveedores");
+    }
+}

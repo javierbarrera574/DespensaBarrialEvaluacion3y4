@@ -1,0 +1,120 @@
+﻿@page "/Administradores"
+@inject IHttpService http
+
+<h3>Lista de Administradores</h3>
+
+<a class="btn btn-primary" href="Administradores/Crear">Nuevo administrador</a>
+
+<style>
+th, td
+{
+    border: solid 1px red;
+    padding:30px;
+}
+thead 
+{
+    background-color: #545554;
+    border-bottom: 4px solid yellow;
+    color:darkgreen;
+}
+</style>
+
+
+
+<table>
+    <tr>
+        <th>Nombre</th>
+        <th>Telefono</th>
+    </tr>
+
+    @if (administradores == null)
+    {
+        <tr>Cargando.......</tr>
+    }
+    else if (administradores.Count == 0)
+    {
+        <tr>No existen datos</tr>
+    }
+    else
+    {
+        @foreach (var item in administradores)
+        {
+            <tr>
+                <td>@item.Nombre</td>
+                <td>@item.NumeroTelefono</td>
+                <td>
+                    <a class="btn btn-primary"
+               href="Administradores/Editar/@item.Id">
+                        Editar
+                    </a>
+                </td>
+                <td>
+                    <button class="btn btn-warning"
+                    @onclick="()=>Eliminar(item)">
+                        Borrar
+                    </button>
+                </td>
+            </tr>
+        }
+    }
+</table>
+
+<Confirmacion @ref="confirmacion"
+              verCancelar="true"
+              verOk="true"
+              textOk="Ok"
+              Titulo="Borrar administrador"
+              onCancel="Cancelar"
+              onConfirm="Borrar">
+    <div>
+        Está por borrar el administrador @AdministradorBorrar.Nombre @AdministradorBorrar.NumeroTelefono
+        <br />
+        ¿Quiere continuar con la operación?
+    </div>
+</Confirmacion>
+
+
+@code {
+    List<Administrador> administradores;
+    Confirmacion confirmacion;
+    Administrador AdministradorBorrar;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await Leer();
+    }
+
+    private async Task Leer()
+    {
+        var respuesta = await http.Get<List<Administrador>>("api/Administradores");
+        if (!respuesta.Error)
+        {
+            administradores = respuesta.Respuesta;
+        }
+    }
+
+    private void Eliminar(Administrador administradorBorrar)
+    {
+        AdministradorBorrar = administradorBorrar;
+        confirmacion.Ver();
+    }
+
+    private void Cancelar()
+    {
+        confirmacion.Ocultar();
+        AdministradorBorrar = null;
+    }
+
+    private async Task Borrar()
+    {
+        var respuesta = await http.Delete($"api/Administradores/{AdministradorBorrar.Id}");
+        if (respuesta.Error)
+        {
+            var body = "Error";
+        }
+        Cancelar();
+        await Leer();
+    }
+}

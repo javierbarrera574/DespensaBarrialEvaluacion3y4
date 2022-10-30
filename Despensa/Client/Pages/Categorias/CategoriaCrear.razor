@@ -1,0 +1,27 @@
+﻿@page "/Categorias/Crear"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Nueva categoria</h3>
+
+<FormCategoria categoria="categoria" onCancel="Cancelar" onValidSubmit="Grabar" />
+
+
+@code {
+    private Categoria categoria = new Categoria();
+
+    private async void Grabar()
+    {
+        var httpRespuesta = await http.Post<Categoria>("api/Categorias", categoria);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        navigationManager.NavigateTo("/Categorias");
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Categorias");
+    }
+}

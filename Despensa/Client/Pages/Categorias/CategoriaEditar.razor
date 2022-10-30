@@ -1,0 +1,49 @@
+﻿@page "/Categorias/Editar/{categoriaId:int}"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Editar categoria</h3>
+
+
+<FormCategoria categoria="categoria" onCancel="Cancelar" onValidSubmit="Grabar" />
+
+
+@code 
+{
+    private Categoria categoria  = new Categoria();
+    [Parameter] public int categoriaId { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Mostrar();
+    }
+
+    private async Task Mostrar()
+    {
+        var respuesta = await http.Get<Categoria>($"api/Categorias/{categoriaId}");
+        if(respuesta.Error)
+        {
+            var body = respuesta.HttpResponseMessage;
+        }
+        else
+        {
+            categoria = respuesta.Respuesta;
+        }
+    }
+
+    private async void Grabar()
+    {
+        var respuesta = await http.Put<Categoria>($"api/Categorias/{categoriaId}",
+                                                     categoria);
+        if (respuesta.Error)
+        {
+            var body = respuesta.HttpResponseMessage;
+        }
+        navigationManager.NavigateTo("/Categorias");
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Categorias");
+    }
+}

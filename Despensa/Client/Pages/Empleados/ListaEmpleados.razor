@@ -1,0 +1,127 @@
+﻿@page "/Empleados"
+@inject IHttpService http
+
+<h3>Lista de Empleados</h3>
+
+<a class="btn btn-primary" href="Empleados/Crear">Nuevo empleado</a>
+
+
+<style>
+th, td
+{
+    border: solid 1px red;
+    padding:30px;
+}
+thead 
+{
+    background-color: #545554;
+    border-bottom: 4px solid yellow;
+    color:darkgreen;
+}
+</style>
+
+
+
+
+<table>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Edad</th>
+
+    </tr>
+
+    @if (empleados == null)
+    {
+        <tr>Cargando.......</tr>
+    }
+    else if (empleados.Count == 0)
+    {
+        <tr>No existen datos</tr>
+    }
+    else
+    {
+        @foreach (var item in empleados)
+        {
+            <tr>
+                <td>@item.Nombre</td>
+                <td>@item.Apellido</td>
+                <td>@item.Edad</td>
+              
+
+                <td>
+                    <a class="btn btn-primary"
+               href="Empleados/Editar/@item.Id">
+                        Editar
+                    </a>
+                </td>
+                <td>
+                    <button class="btn btn-warning"
+                    @onclick="()=>Eliminar(item)">
+                        Borrar
+                    </button>
+                </td>
+            </tr>
+        }
+    }
+</table>
+
+<Confirmacion @ref="confirmacion"
+              verCancelar="true"
+              verOk="true"
+              textOk="Ok"
+              Titulo="Borrar el deposito"
+              onCancel="Cancelar"
+              onConfirm="Borrar">
+    <div>
+        Está por borrar el empleado @EmpleadoBorrar.Nombre @EmpleadoBorrar.Apellido @EmpleadoBorrar.Edad
+        <br />
+        ¿Quiere continuar con la operación?
+    </div>
+</Confirmacion>
+
+
+@code {
+    List<Empleado> empleados;
+    Confirmacion confirmacion;
+    Empleado EmpleadoBorrar;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await Leer();
+    }
+
+    private async Task Leer()
+    {
+        var respuesta = await http.Get<List<Empleado>>("api/Empleados");
+        if (!respuesta.Error)
+        {
+            empleados = respuesta.Respuesta;
+        }
+    }
+
+    private void Eliminar(Empleado empleadoBorrar)
+    {
+        EmpleadoBorrar = empleadoBorrar;
+        confirmacion.Ver();
+    }
+
+    private void Cancelar()
+    {
+        confirmacion.Ocultar();
+        EmpleadoBorrar = null;
+    }
+
+    private async Task Borrar()
+    {
+        var respuesta = await http.Delete($"api/Empleados/{EmpleadoBorrar.Id}");
+        if (respuesta.Error)
+        {
+            var body = "Error";
+        }
+        Cancelar();
+        await Leer();
+    }
+}
