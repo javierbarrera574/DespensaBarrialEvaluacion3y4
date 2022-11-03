@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace Despensa.BD.Datos.Entidades
 {
@@ -13,7 +12,6 @@ namespace Despensa.BD.Datos.Entidades
         [Required]
         public string NumeroTelefono { get; set; }
 
-        [JsonIgnore]
-        public List<Proveedor?> Proveedores { get; set; }
+        public List<Proveedor> Proveedores { get; set; }
     }
 }

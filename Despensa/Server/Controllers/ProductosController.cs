@@ -1,10 +1,9 @@
-﻿
-using Despensa.BD.Datos;
+﻿using Despensa.BD.Datos;
 using Despensa.BD.Datos.Entidades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Prueba.Server.Controllers
+namespace Despensa.Server.Controllers
 {
     [ApiController]
     [Route("Productos")]
@@ -21,7 +20,10 @@ namespace Prueba.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Producto>>> Get()
         {
-            var respuesta = await context.Productos.ToListAsync();
+            var respuesta = await context.Productos.
+                Include(i => i.Categoria).
+                Include(i => i.Proveedor).
+                ToListAsync();
             return respuesta;
         }
 
@@ -29,9 +31,11 @@ namespace Prueba.Server.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Producto>> Get(int id)
         {
-            var producto = await context.Productos
+            var producto = await context.Productos.
 
-                .Where(e => e.Id == id)
+                Where(e => e.Id == id).
+                Include(i => i.Categoria).
+                Include(i=>i.Proveedor)
                 .FirstOrDefaultAsync();
 
 

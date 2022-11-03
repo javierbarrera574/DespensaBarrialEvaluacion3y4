@@ -1,6 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Despensa.BD.Datos.Entidades
 {
@@ -19,16 +17,13 @@ namespace Despensa.BD.Datos.Entidades
 
         [Required]
 
-        public string NumeroTelefono { get; set; }
+        public string NumeroTelefono { get; set; }   
+        
+        public int AdministradorId { get; set; }
 
-        [JsonIgnore]
-        public List<Producto?> Productos { get; set; }
+        public Administrador Administrador { get; set; }
 
-        [JsonIgnore]
-        public int? AdministradorId { get; set; }
-
-        [JsonIgnore]
-        public Administrador? administrador { get; set; }
+        public List<Producto> Productos { get; set; }
 
     }
 }

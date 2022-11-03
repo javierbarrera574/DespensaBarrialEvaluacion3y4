@@ -1,38 +1,38 @@
-﻿@page "/Productos"
+﻿@using Despensa.BD.Datos.Entidades
+@using Despensa.Client.Servicios
 @inject IHttpService http
-
-<h3>Lista de Productos</h3>
-
-<a class="btn btn-primary" href="Productos/Crear">Nuevo producto</a>
+@page "/Productos"
 
 
-<style>
-    th, td {
-        border: solid 1px red;
-        padding: 30px;
-    }
+<h3>Lista Productos</h3>
 
-    thead {
-        background-color: #545554;
-        border-bottom: 4px solid yellow;
-        color: darkgreen;
-    }
-</style>
+    <br />
+       <br />
 
+        <a class="btn btn-primary" href="/Productos/Crear">Agregar nuevo producto</a>
 
+         <br />
+           <br />
 
 
 <table>
     <tr>
         <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Edad</th>
+
+        <th>Descripcion</th>
+
+        <th>Caducidad</th>
+
+        <th>Precio</th>
+
+        <th>Proveedor</th>
+
+        <th></th>
 
     </tr>
-
     @if (productos == null)
     {
-        <tr>Cargando.......</tr>
+        <tr>Cargando......</tr>
     }
     else if (productos.Count == 0)
     {
@@ -43,84 +43,126 @@
         @foreach (var item in productos)
         {
             <tr>
+
                 <td>@item.NombreProducto</td>
+
                 <td>@item.DescripcionProducto</td>
+
                 <td>@item.FechaVencimiento</td>
+
                 <td>@item.PrecioProducto</td>
+
+                <td>@item.Proveedor.Nombre</td>
 
                 <td>
                     <a class="btn btn-primary"
-               href="Productos/Editar/@item.Id">
+               href="Editar/@item.Id">
                         Editar
                     </a>
                 </td>
-                <td>
-                    <button class="btn btn-warning"
-                    @onclick="()=>Eliminar(item)">
-                        Borrar
-                    </button>
-                </td>
+
             </tr>
         }
+
+
     }
 </table>
 
-<Confirmacion @ref="confirmacion"
-              verCancelar="true"
-              verOk="true"
-              textOk="Ok"
-              Titulo="Borrar producto"
-              onCancel="Cancelar"
-              onConfirm="Borrar">
-    <div>
-        Está por borrar el producto @ProductoBorrar.NombreProducto @ProductoBorrar.DescripcionProducto @ProductoBorrar.FechaVencimiento @ProductoBorrar.PrecioProducto
+<br />
+<br />
+
+
+<h3>Lista pedidos Proveedores</h3>
+
+
+          <br />
+        <a class="btn btn-primary" href="/Proveedores/Crear">Alta nuevo pedido</a>
         <br />
-        ¿Quiere continuar con la operación?
-    </div>
-</Confirmacion>
+          <br />
+
+<table>
+    <tr>
+    
+        <th>Proveedor</th>
+
+        <th>Nombre</th>
+
+        <th>Correo</th>
+
+        <th>Telefono</th>
+
+    </tr>
+
+
+
+    @if (proveedores == null)
+    {
+        <tr>Cargando......</tr>
+    }
+    else if (proveedores.Count == 0)
+    {
+        <tr>No existen datos</tr>
+    }
+    else
+    {
+
+        @foreach (var item in proveedores)
+        {
+            <tr>
+                <td>@item.Nombre</td>
+
+                <td>@item.CorreoElectronico</td>
+
+                <td>@item.NumeroTelefono</td>
+
+            </tr>
+        }
+    }
+
+</table>
+
 
 
 @code {
+
     List<Producto> productos;
-    Confirmacion confirmacion;
-    Producto ProductoBorrar;
+
+    List<Proveedor> proveedores;
+
+    List<Administrador> administradores;
+
 
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-        await Leer();
+
+        await LeerProveedores();
+
+        await LeerProductos();
     }
 
-    private async Task Leer()
+    private async Task LeerProductos()
+
     {
+
         var respuesta = await http.Get<List<Producto>>("api/Productos");
+
         if (!respuesta.Error)
         {
             productos = respuesta.Respuesta;
         }
+
     }
 
-    private void Eliminar(Producto productoBorrar)
+    private async Task LeerProveedores()
     {
-        ProductoBorrar = productoBorrar;
-        confirmacion.Ver();
-    }
 
-    private void Cancelar()
-    {
-        confirmacion.Ocultar();
-        ProductoBorrar = null;
-    }
+        var respuesta = await http.Get<List<Proveedor>>("api/Proveedores");
 
-    private async Task Borrar()
-    {
-        var respuesta = await http.Delete($"api/Productos/{ProductoBorrar.Id}");
-        if (respuesta.Error)
+        if (!respuesta.Error)
         {
-            var body = "Error";
+            proveedores = respuesta.Respuesta;
         }
-        Cancelar();
-        await Leer();
+
     }
 }

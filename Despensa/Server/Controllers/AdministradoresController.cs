@@ -111,6 +111,7 @@ namespace Despensa.Server.Controllers
 
             var administrador = await context.Administradores.
                 Where(x => x.Id == id).
+                Include(x =>x.Proveedores).
                 FirstOrDefaultAsync();
 
             if (administrador is null)

@@ -1,23 +1,13 @@
 ﻿@page "/Categorias"
 @inject IHttpService http
+@using Despensa.BD.Datos.Entidades
+@using Despensa.Client.Servicios
+
 
 <h3>Lista de Categorias</h3>
 
 <a class="btn btn-primary" href="Categorias/Crear">Nueva categoria</a>
 
-
-<style>
-    th, td {
-        border: solid 1px red;
-        padding: 30px;
-    }
-
-    thead {
-        background-color: #545554;
-        border-bottom: 4px solid yellow;
-        color: darkgreen;
-    }
-</style>
 
 
 
@@ -25,6 +15,7 @@
     <tr>
         <th>Tipo</th>
         <th>Codigo</th>
+        <th>Producto</th>
     </tr>
 
     @if (categorias == null)
@@ -42,51 +33,89 @@
             <tr>
                 <td>@item.TipoCategoria</td>
                 <td>@item.CodigoCategoria</td>
+                <td>@item.Producto.NombreProducto</td>
                 <td>
                     <a class="btn btn-primary"
                href="Categorias/Editar/@item.Id">
                         Editar
                     </a>
                 </td>
-                <td>
-                    <button class="btn btn-warning"
-                    @onclick="()=>Eliminar(item)">
-                        Borrar
-                    </button>
-                </td>
+
             </tr>
         }
     }
 </table>
 
-<Confirmacion @ref="confirmacion"
-              verCancelar="true"
-              verOk="true"
-              textOk="Ok"
-              Titulo="Borrar categoria"
-              onCancel="Cancelar"
-              onConfirm="Borrar">
-    <div>
-        Está por borrar la categoria @CategoriaBorrar.TipoCategoria @CategoriaBorrar.CodigoCategoria
-        <br />
-        ¿Quiere continuar con la operación?
-    </div>
-</Confirmacion>
+
+
+
+
+
+<br />
+<br />
+
+
+    <h3>Lista productos con categoria</h3>
+
+
+       <br />
+       <a class="btn btn-primary" href="/Productos/Crear">Productos</a>
+     <br />
+      <br />
+
+
+
+<table>
+
+    <tr>
+        <th>Nombre</th>
+        <th>Descripcion</th>
+        <th>Vencimiento</th>
+        <th>Precio</th>
+    </tr>
+
+    @if (productos == null)
+    {
+        <tr>Cargando.......</tr>
+    }
+    else if (productos.Count == 0)
+    {
+        <tr>No existen datos</tr>
+    }
+    else
+    {
+        @foreach (var item in productos)
+        {
+            <tr>
+                <td>@item.NombreProducto</td>
+                <td>@item.DescripcionProducto</td>
+                <td>@item.FechaVencimiento</td>
+                <td>@item.PrecioProducto</td>
+
+            </tr>
+        }
+    }
+</table>
+
 
 
 @code {
+
     List<Categoria> categorias;
-    Confirmacion confirmacion;
+
+    List<Producto> productos;
+
     Categoria CategoriaBorrar;
 
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await Leer();
+        await LeerCategorias();
+        await LeerProductos();
     }
 
-    private async Task Leer()
+    private async Task LeerCategorias()
     {
         var respuesta = await http.Get<List<Categoria>>("api/Categorias");
         if (!respuesta.Error)
@@ -95,26 +124,12 @@
         }
     }
 
-    private void Eliminar(Categoria categoriaBorrar)
+    private async Task LeerProductos()
     {
-        CategoriaBorrar = categoriaBorrar;
-        confirmacion.Ver();
-    }
-
-    private void Cancelar()
-    {
-        confirmacion.Ocultar();
-        CategoriaBorrar = null;
-    }
-
-    private async Task Borrar()
-    {
-        var respuesta = await http.Delete($"api/Categorias/{CategoriaBorrar.Id}");
-        if (respuesta.Error)
+        var respuesta = await http.Get<List<Producto>>("api/Productos");
+        if (!respuesta.Error)
         {
-            var body = "Error";
+             productos = respuesta.Respuesta;
         }
-        Cancelar();
-        await Leer();
     }
 }

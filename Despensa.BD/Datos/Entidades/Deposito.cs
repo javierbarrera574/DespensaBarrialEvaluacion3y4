@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace Despensa.BD.Datos.Entidades
 {
@@ -20,9 +19,8 @@ namespace Despensa.BD.Datos.Entidades
         [Required]
         public string UnidadMinima { get; set; }
 
-        [JsonIgnore]
-        public List<Producto?> Productos { get; set; }
-
+       
+        public List<Producto> Productos { get; set; }
 
     }
 }

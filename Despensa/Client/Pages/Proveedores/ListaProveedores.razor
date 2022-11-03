@@ -1,32 +1,39 @@
 ﻿@page "/Proveedores"
 @inject IHttpService http
+@inject NavigationManager navigationManager
+@using Despensa.BD.Datos.Entidades
+@using Despensa.Client.Servicios
 
-<h3>Lista de Proveedores</h3>
-
-<a class="btn btn-primary" href="Proveedores/Crear">Nuevo proveedor</a>
 
 
-<style>
-    th, td {
-        border: solid 1px red;
-        padding: 30px;
-    }
+     <br />
+         <br />
 
-    thead {
-        background-color: #545554;
-        border-bottom: 4px solid yellow;
-        color: darkgreen;
-    }
-</style>
+          <h3>Lista de Proveedores</h3>
+
+        <a class="btn btn-primary" href="Proveedores/Crear">Nuevo proveedor</a>
+
+     <br />
+       <br />
 
 
 
 
 <table>
     <tr>
+
         <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Edad</th>
+
+
+        <th>Correo</th>
+
+
+        <th>Telefono</th>
+
+       
+        <th>Administrador</th>
+
+
 
     </tr>
 
@@ -44,9 +51,12 @@
         {
             <tr>
                 <td>@item.Nombre</td>
+
                 <td>@item.CorreoElectronico</td>
+
                 <td>@item.NumeroTelefono</td>
 
+                <td>@item.Administrador.Nombre</td>
 
                 <td>
                     <a class="btn btn-primary"
@@ -64,6 +74,56 @@
         }
     }
 </table>
+ 
+   <br />
+      <br />
+
+
+     <h3>Lista de Proveedores del administrador</h3>
+
+       <a class="btn btn-primary" href="Administrador/Crear">Proveedores del administrador</a>
+
+        <br />
+         <br />
+
+
+
+<table>
+    <tr>
+
+        <th>Nombre</th>
+
+
+        <th>Apellido</th>
+
+
+
+    </tr>
+
+    @if (administradores == null)
+    {
+        <tr>Cargando.......</tr>
+    }
+    else if (administradores.Count == 0)
+    {
+        <tr>No existen datos</tr>
+    }
+    else
+    {
+        @foreach (var item in administradores)
+        {
+            <tr>
+
+                <td>@item.Nombre</td>
+
+                <td>@item.NumeroTelefono</td>
+
+            </tr>
+        }
+    }
+</table>
+
+
 
 <Confirmacion @ref="confirmacion"
               verCancelar="true"
@@ -73,7 +133,7 @@
               onCancel="Cancelar"
               onConfirm="Borrar">
     <div>
-        Está por borrar el proveedor @ProveedorBorrar.Nombre @ProveedorBorrar.CorreoElectronico @ProveedorBorrar.NumeroTelefono
+        Está por borrar el proveedor @ProveedorBorrar.Id
         <br />
         ¿Quiere continuar con la operación?
     </div>
@@ -81,18 +141,25 @@
 
 
 @code {
+
     List<Proveedor> proveedores;
+
+    List<Administrador> administradores;
+
     Confirmacion confirmacion;
+
     Proveedor ProveedorBorrar;
 
+    [Parameter] public int id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await Leer();
+        await LeerProveedores();
+        await LeerAdministradores();
     }
 
-    private async Task Leer()
+    private async Task LeerProveedores()
     {
         var respuesta = await http.Get<List<Proveedor>>("api/Proveedores");
         if (!respuesta.Error)
@@ -100,6 +167,17 @@
             proveedores = respuesta.Respuesta;
         }
     }
+
+
+    private async Task LeerAdministradores()
+    {
+        var respuesta = await http.Get<List<Administrador>>("api/Administradores");
+        if (!respuesta.Error)
+        {
+            administradores = respuesta.Respuesta;
+        }
+    }
+
 
     private void Eliminar(Proveedor proveedorBorrar)
     {
@@ -117,10 +195,8 @@
     {
         var respuesta = await http.Delete($"api/Proveedores/{ProveedorBorrar.Id}");
         if (respuesta.Error)
-        {
-            var body = "Error";
-        }
+ 
         Cancelar();
-        await Leer();
+        await LeerProveedores();
     }
 }

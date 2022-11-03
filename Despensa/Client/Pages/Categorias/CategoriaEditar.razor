@@ -1,6 +1,9 @@
-﻿@page "/Categorias/Editar/{categoriaId:int}"
+﻿@page "/Categorias/Editar/{id:int}"
 @inject IHttpService http
 @inject NavigationManager navigationManager
+@using Despensa.BD.Datos.Entidades
+@using Despensa.Client.Servicios
+
 
 <h3>Editar categoria</h3>
 
@@ -11,7 +14,7 @@
 @code 
 {
     private Categoria categoria  = new Categoria();
-    [Parameter] public int categoriaId { get; set; }
+    [Parameter] public int id { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
@@ -20,7 +23,7 @@
 
     private async Task Mostrar()
     {
-        var respuesta = await http.Get<Categoria>($"api/Categorias/{categoriaId}");
+        var respuesta = await http.Get<Categoria>($"api/Categorias/{id}");
         if(respuesta.Error)
         {
             var body = respuesta.HttpResponseMessage;
@@ -33,7 +36,7 @@
 
     private async void Grabar()
     {
-        var respuesta = await http.Put<Categoria>($"api/Categorias/{categoriaId}",
+        var respuesta = await http.Put<Categoria>($"api/Categorias/{id}",
                                                      categoria);
         if (respuesta.Error)
         {

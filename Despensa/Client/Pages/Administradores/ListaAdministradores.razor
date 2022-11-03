@@ -1,5 +1,7 @@
-﻿@page "/Administradores"
+﻿@using Despensa.BD.Datos.Entidades
+@using Despensa.Client.Servicios
 @inject IHttpService http
+@page "/Administradores"
 
 <h3>Lista de Administradores</h3>
 
@@ -40,8 +42,15 @@ thead
         @foreach (var item in administradores)
         {
             <tr>
-                <td>@item.Nombre</td>
+                <td>@item.Nombre</td> 
+
+                   <td></td>
+                   <td></td>
+
                 <td>@item.NumeroTelefono</td>
+                   <td></td>
+
+              
                 <td>
                     <a class="btn btn-primary"
                href="Administradores/Editar/@item.Id">
@@ -59,6 +68,9 @@ thead
     }
 </table>
 
+
+
+
 <Confirmacion @ref="confirmacion"
               verCancelar="true"
               verOk="true"
@@ -75,8 +87,11 @@ thead
 
 
 @code {
+
     List<Administrador> administradores;
+
     Confirmacion confirmacion;
+
     Administrador AdministradorBorrar;
 
 
@@ -111,9 +126,7 @@ thead
     {
         var respuesta = await http.Delete($"api/Administradores/{AdministradorBorrar.Id}");
         if (respuesta.Error)
-        {
-            var body = "Error";
-        }
+
         Cancelar();
         await Leer();
     }

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace Despensa.BD.Datos.Entidades
 {
@@ -16,8 +15,8 @@ namespace Despensa.BD.Datos.Entidades
 
         public string CodigoCategoria { get; set; }
 
-        [JsonIgnore]
-        public Producto? Producto { get; set; }
+        
+        public Producto Producto { get; set; }
 
     }
 }

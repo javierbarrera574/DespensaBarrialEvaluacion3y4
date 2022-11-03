@@ -33,6 +33,7 @@ namespace Despensa.Server.Controllers
 
             var categoria = await context.Categorias.
                 Where(x => x.Id == id).
+                Include(x => x.Producto).
                 FirstOrDefaultAsync();
 
             if (categoria is null)
@@ -134,8 +135,5 @@ namespace Despensa.Server.Controllers
             }
 
         }
-
     }
-
-
 }

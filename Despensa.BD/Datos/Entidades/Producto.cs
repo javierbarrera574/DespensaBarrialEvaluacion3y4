@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+
 
 namespace Despensa.BD.Datos.Entidades
 {
@@ -23,25 +22,22 @@ namespace Despensa.BD.Datos.Entidades
 
         public string PrecioProducto { get; set; }
 
-        [JsonIgnore]
-        public int? ProveedorId { get; set; }
+        
+        public int ProveedorId { get; set; }
 
-        [JsonIgnore]
-        public Proveedor? Proveedor { get; set; }
+       
+        public Proveedor Proveedor { get; set; }
 
-        [JsonIgnore]
-        public int? CategoriaId { get; set; }
+    
+        public int CategoriaId { get; set; }
 
-        [JsonIgnore]
-        public Categoria? Categoria { get; set; }
+     
+        public Categoria Categoria { get; set; }
 
-        [JsonIgnore]
-        public int? DepositoId { get; set; }
+   
+        public int DepositoId { get; set; }
 
-
-        [JsonIgnore]
-
-        public Deposito? Deposito { get; set; }
+        public Deposito Deposito { get; set; }
 
 
     }

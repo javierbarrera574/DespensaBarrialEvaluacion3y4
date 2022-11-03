@@ -1,7 +1,11 @@
-﻿<EditForm Model="administrador" OnValidSubmit="onValidSubmit">
+﻿@using Despensa.BD.Datos.Entidades
+@inject NavigationManager navigatioManager
+@using Despensa.Client.Servicios
+
+<EditForm Model="administrador" OnValidSubmit="onValidSubmit">
     <DataAnnotationsValidator/>
     <div class="form-group">
-        <label>Nombre</label>
+        <label>"txt1"</label>
         <div>
             <InputText class="form-control" @bind-Value="@administrador.Nombre" />
             <ValidationMessage For="@(() => administrador.Nombre)" />
@@ -9,10 +13,17 @@
 
     </div>
     <div class="form-group">
-        <label>Telefono</label>
+        <label>"txt2"</label>
         <div>
             <InputText class="form-control" @bind-Value="@administrador.NumeroTelefono" />
             <ValidationMessage For="@(() => administrador.NumeroTelefono)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>"txt3"</label>
+        <div>
+            <InputNumber class="form-select" @bind-Value="@proveedor.AdministradorId" />
+            <ValidationMessage For="@(() => proveedor.AdministradorId)" />
         </div>
     </div>
     <br />
@@ -22,6 +33,7 @@
 
 @code {
     [Parameter] public Administrador administrador { get; set; }
+    [Parameter] public Proveedor proveedor { get; set;}
     [Parameter] public EventCallback onValidSubmit { get; set; }
     [Parameter] public EventCallback onCancel { get; set; }
 }

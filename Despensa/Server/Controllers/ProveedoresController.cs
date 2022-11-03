@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Prueba.Server.Controllers
+namespace Despensa.Server.Controllers
 {
     [ApiController]
     [Route("Proveedores")]
@@ -22,7 +22,9 @@ namespace Prueba.Server.Controllers
         public async Task<ActionResult<List<Proveedor>>> Get()
         {
 
-            var respuesta = await context.Proveedores.ToListAsync();
+            var respuesta = await context.Proveedores.
+                Include(i => i.Administrador).
+                ToListAsync();
             return respuesta;
 
         }
@@ -109,17 +111,18 @@ namespace Prueba.Server.Controllers
 
         [HttpGet("id:int")]
 
-        public async Task<ActionResult<Proveedor>> GetBuscar(int id)
+        public async Task<ActionResult<Proveedor>> ProveedorBuscar(int id)
         {
 
             var proveedor = await context.Proveedores.
                 Where(x => x.Id == id).
-                //Include(p=>p.Productos).
+                Include(x =>x.Productos).
+                Include(p=>p.Administrador).
                 FirstOrDefaultAsync();
 
             if (proveedor is null)
             {
-                return NotFound($"No se encontro el proveedor de Id= {id}");
+                return NotFound($"No se encontro el proveedor de identificacion = {id}");
             }
 
             return proveedor;

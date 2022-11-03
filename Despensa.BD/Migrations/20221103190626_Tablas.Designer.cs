@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Despensa.BD.Migrations
 {
     [DbContext(typeof(AplicacionDbContext))]
-    [Migration("20221029022939_tablas")]
-    partial class tablas
+    [Migration("20221103190626_Tablas")]
+    partial class Tablas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -85,6 +85,10 @@ namespace Despensa.BD.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UnidadMinima")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Depositos");
@@ -123,25 +127,39 @@ namespace Despensa.BD.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DepositoId")
+                        .HasColumnType("int");
+
                     b.Property<string>("DescripcionProducto")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FechaVencimiento")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NombreProducto")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrecioProducto")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ProveedorId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("NombreProducto")
+                    b.HasIndex("CategoriaId")
                         .IsUnique();
+
+                    b.HasIndex("DepositoId");
+
+                    b.HasIndex("ProveedorId");
 
                     b.ToTable("Productos");
                 });
@@ -153,6 +171,9 @@ namespace Despensa.BD.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AdministradorId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CorreoElectronico")
                         .IsRequired()
@@ -168,7 +189,67 @@ namespace Despensa.BD.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AdministradorId");
+
                     b.ToTable("Proveedores");
+                });
+
+            modelBuilder.Entity("Despensa.BD.Datos.Entidades.Producto", b =>
+                {
+                    b.HasOne("Despensa.BD.Datos.Entidades.Categoria", "Categoria")
+                        .WithOne("Producto")
+                        .HasForeignKey("Despensa.BD.Datos.Entidades.Producto", "CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Despensa.BD.Datos.Entidades.Deposito", "Deposito")
+                        .WithMany("Productos")
+                        .HasForeignKey("DepositoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Despensa.BD.Datos.Entidades.Proveedor", "Proveedor")
+                        .WithMany("Productos")
+                        .HasForeignKey("ProveedorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categoria");
+
+                    b.Navigation("Deposito");
+
+                    b.Navigation("Proveedor");
+                });
+
+            modelBuilder.Entity("Despensa.BD.Datos.Entidades.Proveedor", b =>
+                {
+                    b.HasOne("Despensa.BD.Datos.Entidades.Administrador", "Administrador")
+                        .WithMany("Proveedores")
+                        .HasForeignKey("AdministradorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Administrador");
+                });
+
+            modelBuilder.Entity("Despensa.BD.Datos.Entidades.Administrador", b =>
+                {
+                    b.Navigation("Proveedores");
+                });
+
+            modelBuilder.Entity("Despensa.BD.Datos.Entidades.Categoria", b =>
+                {
+                    b.Navigation("Producto");
+                });
+
+            modelBuilder.Entity("Despensa.BD.Datos.Entidades.Deposito", b =>
+                {
+                    b.Navigation("Productos");
+                });
+
+            modelBuilder.Entity("Despensa.BD.Datos.Entidades.Proveedor", b =>
+                {
+                    b.Navigation("Productos");
                 });
 #pragma warning restore 612, 618
         }

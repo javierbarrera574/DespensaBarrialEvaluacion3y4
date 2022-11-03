@@ -1,11 +1,10 @@
-﻿
-using Despensa.BD.Datos;
+﻿using Despensa.BD.Datos;
 using Despensa.BD.Datos.Entidades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Prueba.Server.Controllers
+namespace Despensa.Server.Controllers
 {
 
     [ApiController]
@@ -125,6 +124,7 @@ namespace Prueba.Server.Controllers
 
             var deposito = await context.Depositos.
                 Where(x => x.Id == id).
+                Include(x => x.Productos).
                 FirstOrDefaultAsync();
 
             if (deposito is null)

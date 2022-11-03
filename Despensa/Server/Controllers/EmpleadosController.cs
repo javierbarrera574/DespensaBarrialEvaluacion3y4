@@ -1,11 +1,10 @@
-﻿
-using Despensa.BD.Datos;
+﻿using Despensa.BD.Datos;
 using Despensa.BD.Datos.Entidades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Prueba.Server.Controllers
+namespace Despensa.Server.Controllers
 {
     [ApiController]
     [Route("Empleados")]

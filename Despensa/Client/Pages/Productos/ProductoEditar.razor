@@ -1,6 +1,9 @@
-﻿@page "/Productos/Editar/{productoId:int}"
+﻿@page "/Productos/Editar/{id:int}"
 @inject IHttpService http
 @inject NavigationManager navigationManager
+@using Despensa.BD.Datos.Entidades
+@using Despensa.Client.Servicios
+
 
 <h3>Editar producto</h3>
 
@@ -11,7 +14,7 @@
 @code
 {
     private Producto producto = new Producto();
-    [Parameter] public int productoId { get; set; }
+    [Parameter] public int id { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
@@ -20,7 +23,7 @@
 
     private async Task Mostrar()
     {
-        var respuesta = await http.Get<Producto>($"api/Productos/{productoId}");
+        var respuesta = await http.Get<Producto>($"api/Productos/{id}");
         if (respuesta.Error)
         {
             var body = respuesta.HttpResponseMessage;
@@ -33,7 +36,7 @@
 
     private async void Grabar()
     {
-        var respuesta = await http.Put<Producto>($"api/Productos/{productoId}",
+        var respuesta = await http.Put<Producto>($"api/Productos/{id}",
                                                      producto);
         if (respuesta.Error)
         {

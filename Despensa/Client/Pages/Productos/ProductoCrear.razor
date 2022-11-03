@@ -1,6 +1,8 @@
 ﻿@page "/Productos/Crear"
 @inject IHttpService http
 @inject NavigationManager navigationManager
+@using Despensa.BD.Datos.Entidades
+@using Despensa.Client.Servicios
 
 <h3>Nuevo producto</h3>
 
@@ -8,7 +10,9 @@
 
 
 @code {
+
     private Producto producto = new Producto();
+  //  private Proveedor proveedor = new Proveedor();
 
     private async void Grabar()
     {
