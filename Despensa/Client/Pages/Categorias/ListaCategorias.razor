@@ -33,7 +33,6 @@
             <tr>
                 <td>@item.TipoCategoria</td>
                 <td>@item.CodigoCategoria</td>
-                <td>@item.Producto.NombreProducto</td>
                 <td>
                     <a class="btn btn-primary"
                href="Categorias/Editar/@item.Id">
@@ -48,71 +47,15 @@
 
 
 
-
-
-
-<br />
-<br />
-
-
-    <h3>Lista productos con categoria</h3>
-
-
-       <br />
-       <a class="btn btn-primary" href="/Productos/Crear">Productos</a>
-     <br />
-      <br />
-
-
-
-<table>
-
-    <tr>
-        <th>Nombre</th>
-        <th>Descripcion</th>
-        <th>Vencimiento</th>
-        <th>Precio</th>
-    </tr>
-
-    @if (productos == null)
-    {
-        <tr>Cargando.......</tr>
-    }
-    else if (productos.Count == 0)
-    {
-        <tr>No existen datos</tr>
-    }
-    else
-    {
-        @foreach (var item in productos)
-        {
-            <tr>
-                <td>@item.NombreProducto</td>
-                <td>@item.DescripcionProducto</td>
-                <td>@item.FechaVencimiento</td>
-                <td>@item.PrecioProducto</td>
-
-            </tr>
-        }
-    }
-</table>
-
-
-
 @code {
 
     List<Categoria> categorias;
-
-    List<Producto> productos;
-
-    Categoria CategoriaBorrar;
 
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         await LeerCategorias();
-        await LeerProductos();
     }
 
     private async Task LeerCategorias()
@@ -121,15 +64,6 @@
         if (!respuesta.Error)
         {
             categorias = respuesta.Respuesta;
-        }
-    }
-
-    private async Task LeerProductos()
-    {
-        var respuesta = await http.Get<List<Producto>>("api/Productos");
-        if (!respuesta.Error)
-        {
-             productos = respuesta.Respuesta;
         }
     }
 }

@@ -25,7 +25,7 @@
 
         <th>Precio</th>
 
-        <th>Proveedor</th>
+        <th>Categoria</th>
 
         <th></th>
 
@@ -52,7 +52,7 @@
 
                 <td>@item.PrecioProducto</td>
 
-                <td>@item.Proveedor.Nombre</td>
+                <td>@item.Categoria.TipoCategoria</td>
 
                 <td>
                     <a class="btn btn-primary"
@@ -72,48 +72,43 @@
 <br />
 
 
-<h3>Lista pedidos Proveedores</h3>
+<h3>Lista categorias de los productos</h3>
 
 
           <br />
-        <a class="btn btn-primary" href="/Proveedores/Crear">Alta nuevo pedido</a>
+               
+          <a class="btn btn-primary" href="Categorias/Crear">Lista categorias</a>
         <br />
           <br />
 
 <table>
     <tr>
     
-        <th>Proveedor</th>
+        <th>Tipo</th>
 
-        <th>Nombre</th>
-
-        <th>Correo</th>
-
-        <th>Telefono</th>
+        <th>Codigo</th>
 
     </tr>
 
 
 
-    @if (proveedores == null)
+    @if (categorias == null)
     {
         <tr>Cargando......</tr>
     }
-    else if (proveedores.Count == 0)
+    else if (categorias.Count == 0)
     {
         <tr>No existen datos</tr>
     }
     else
     {
 
-        @foreach (var item in proveedores)
+        @foreach (var item in categorias)
         {
             <tr>
-                <td>@item.Nombre</td>
+                <td>@item.TipoCategoria</td>
 
-                <td>@item.CorreoElectronico</td>
-
-                <td>@item.NumeroTelefono</td>
+                <td>@item.CodigoCategoria</td>
 
             </tr>
         }
@@ -127,16 +122,12 @@
 
     List<Producto> productos;
 
-    List<Proveedor> proveedores;
-
-    List<Administrador> administradores;
-
-
+    List<Categoria> categorias;
 
     protected override async Task OnInitializedAsync()
     {
 
-        await LeerProveedores();
+        await LeerCategorias();
 
         await LeerProductos();
     }
@@ -154,14 +145,14 @@
 
     }
 
-    private async Task LeerProveedores()
+    private async Task LeerCategorias()
     {
 
-        var respuesta = await http.Get<List<Proveedor>>("api/Proveedores");
+        var respuesta = await http.Get<List<Categoria>>("api/Categorias");
 
         if (!respuesta.Error)
         {
-            proveedores = respuesta.Respuesta;
+            categorias = respuesta.Respuesta;
         }
 
     }

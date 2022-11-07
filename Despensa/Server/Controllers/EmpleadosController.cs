@@ -3,11 +3,10 @@ using Despensa.BD.Datos.Entidades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Despensa.Server.Controllers
 {
     [ApiController]
-    [Route("Empleados")]
+    [Route("api/Empleados")]
     public class EmpleadosController : ControllerBase
     {
         private readonly AplicacionDbContext context;
@@ -16,63 +15,39 @@ namespace Despensa.Server.Controllers
             this.context = Context;
         }
 
-
-
-
-
         [HttpGet]
         public async Task<ActionResult<List<Empleado>>> Get()
         {
+            var respuesta = await context.Empleados.ToListAsync();
 
-            var registro = await context.Empleados.ToListAsync();
-
-            return registro;
-
+            return respuesta;
         }
 
         [HttpPost]
 
-        public async Task<ActionResult<int>> post(Empleado empleado)
+        public async Task<ActionResult<int>> Post(Empleado empleado)
         {
             try
             {
-
                 context.Add(empleado);
                 await context.SaveChangesAsync();
                 return empleado.Id;
-
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest($"No se pudo agregar el empleado por: {e.Message}");
             }
         }
 
-        [HttpGet("id:int")]
 
-        public async Task<ActionResult<Empleado>> GetBuscar(int id)
+        [HttpPut]
+
+        public ActionResult Put(int id, [FromBody] Empleado empleado)
         {
 
-            var empleado = await context.Empleados.
-                Where(x => x.Id == id).
-                FirstOrDefaultAsync();
-
-            if (empleado is null)
-            {
-                return NotFound($"No se encontro el empleado de Id: {id}");
-            }
-
-            return empleado;
-        }
-
-
-        [HttpPut("id:int")]
-
-        public ActionResult PutActualizar(int id, [FromBody] Empleado empleado)
-        {
             if (id != empleado.Id)
             {
-                return BadRequest("No se encontro el empleado");
+                return BadRequest("No se encontro el registro");
             }
 
 
@@ -85,13 +60,11 @@ namespace Despensa.Server.Controllers
             }
 
 
-
             registro.Nombre = empleado.Nombre;
             registro.Apellido = empleado.Apellido;
-            registro.Edad = empleado.Edad;
-
-
-
+            registro.FechaNacimiento = empleado.FechaNacimiento;
+            registro.NumeroTelefono = empleado.NumeroTelefono;
+            
 
             try
             {
@@ -105,18 +78,17 @@ namespace Despensa.Server.Controllers
             {
                 return BadRequest($"No se pudo actualizar el empleado por: {e.Message}");
             }
-
         }
 
         [HttpDelete]
 
-        public ActionResult delete(int id)
+        public ActionResult Delete(int id)
         {
             var registro = context.Empleados.Where(x => x.Id == id).FirstOrDefault();
 
             if (registro is null)
             {
-                return NotFound($"El empleado de Id=  {id}, no fue encontrado");
+                return NotFound($"El registro {id} no fue encontrado");
             }
 
 
@@ -124,16 +96,35 @@ namespace Despensa.Server.Controllers
             {
                 context.Remove(registro);
                 context.SaveChanges();
-                return Ok($"El nombre: {registro.Nombre} del empleado ha sido eliminado");
+                return Ok($"El empleado: {registro.Nombre} ha sido eliminado");
             }
             catch (Exception e)
             {
 
-                return BadRequest($"El registro no pudo eliminarse por: {e.Message}");
+                return BadRequest($"El empleado no pudo eliminarse por: {e.Message}");
 
             }
         }
 
-    }
+        [HttpGet("id:int")]
 
+        public async Task<ActionResult<Empleado>> GetBuscar(int id)
+        {
+
+            var empleado = await context.Empleados.
+                Where(x => x.Id == id).
+                Include(x =>x.Producto).
+                FirstOrDefaultAsync();
+
+            if (empleado is null)
+            {
+                return NotFound($"No se encontro el empleado de Id: {id}");
+            }
+
+            return empleado;
+
+
+        }
+
+    }
 }

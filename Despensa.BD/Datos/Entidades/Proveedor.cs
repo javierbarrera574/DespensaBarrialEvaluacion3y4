@@ -19,11 +19,14 @@ namespace Despensa.BD.Datos.Entidades
 
         public string NumeroTelefono { get; set; }   
         
-        public int AdministradorId { get; set; }
+        public int EmpleadoId { get; set; }
 
-        public Administrador Administrador { get; set; }
+        public Empleado Empleado { get; set; }
 
-        public List<Producto> Productos { get; set; }
+
+        public int ProductoId { get; set; }
+
+        public Producto Producto { get; set; }
 
     }
 }

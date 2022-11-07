@@ -4,16 +4,16 @@
 
 <EditForm Model="producto" OnValidSubmit="onValidSubmit">
     <DataAnnotationsValidator />
-    <div class="form-group">
-        <label>Nombre</label>
+    <div class="txt1">
+        <label>"Nombre del producto"</label>
         <div>
             <InputText class="form-control" @bind-Value="@producto.NombreProducto" />
             <ValidationMessage For="@(() => producto.NombreProducto)" />
         </div>
 
     </div>
-    <div class="form-group">
-        <label>Descripcion</label>
+    <div class="txt2">
+        <label>"Descripcion del producto"</label>
         <div>
             <InputText class="form-control" @bind-Value="@producto.DescripcionProducto" />
             <ValidationMessage For="@(() => producto.DescripcionProducto)" />
@@ -21,30 +21,30 @@
     </div>
 
 
-    <div class="form-group">
-        <label>Vencimiento</label>
+    <div class="txt3">
+        <label>"fecha de vencimiento del producto"</label>
         <div>
             <InputText class="form-control" @bind-Value="@producto.FechaVencimiento" />
             <ValidationMessage For="@(() => producto.FechaVencimiento)" />
         </div>
     </div>
 
-    <div class="form-group">
-        <label>Precio</label>
+    <div class="txt4">
+        <label>"Precio del producto"</label>
         <div>
             <InputText class="form-control" @bind-Value="@producto.PrecioProducto" />
             <ValidationMessage For="@(() => producto.PrecioProducto)" />
         </div>
-    </div>
 
+        <div class="txt5">
+            <label>"Precio del producto"</label>
+            <div>
+                <InputNumber class="form-control" @bind-Value="@producto.CategoriaId" />
+                <ValidationMessage For="@(() => producto.CategoriaId)" />
+            </div>
 
-    <div class="form-group">
-        <label>Precio</label>
-        <div>
-            <InputNumber class="form-control" @bind-Value="@producto.ProveedorId" />
-            <ValidationMessage For="@(() => producto.ProveedorId)" />
         </div>
-    </div>
+        </div>
     <br />
     <button class="btn btn-primary" type="submit">Aceptar</button>
     <button class="btn btn-secondary" @onclick="onCancel">Cancelar</button>

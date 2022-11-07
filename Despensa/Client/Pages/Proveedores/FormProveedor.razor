@@ -3,16 +3,16 @@
 
 <EditForm Model="proveedor" OnValidSubmit="onValidSubmit">
     <DataAnnotationsValidator />
-    <div class="form-group">
-        <label>Nombre</label>
+    <div class="txt1">
+        <label>"Nombre del proveedor"</label>
         <div>
             <InputText class="form-control" @bind-Value="@proveedor.Nombre" />
             <ValidationMessage For="@(() => proveedor.Nombre)" />
         </div>
 
     </div>
-    <div class="form-group">
-        <label>Correo</label>
+    <div class="txt2">
+        <label>"Correo electronico del proveedor"</label>
         <div>
             <InputText class="form-control" @bind-Value="@proveedor.CorreoElectronico" />
             <ValidationMessage For="@(() => proveedor.CorreoElectronico)" />
@@ -20,18 +20,22 @@
     </div>
 
 
-    <div class="form-group">
-        <label>Telefono</label>
+    <div class="txt3">
+        <label>"Numero de telefono del proveedor"</label>
         <div>
             <InputText class="form-control" @bind-Value="@proveedor.NumeroTelefono" />
             <ValidationMessage For="@(() => proveedor.NumeroTelefono)" />
         </div>     
     </div>
-    <div class="form-group">
-        <label>Telefono</label>
+
+
+
+
+    <div class="txt3">
+        <label>"Numero de telefono del proveedor"</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@proveedor.AdministradorId" />
-            <ValidationMessage For="@(() => proveedor.AdministradorId)" />
+            <InputNumber class="form-control" @bind-Value="@proveedor.ProductoId" />
+            <ValidationMessage For="@(() => proveedor.ProductoId)" />
         </div>
     </div>
 

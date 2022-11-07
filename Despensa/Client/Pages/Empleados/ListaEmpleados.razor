@@ -1,0 +1,201 @@
+﻿@page "/Empleado"
+@inject IHttpService http
+@using Despensa.Client.Servicios;
+@using Despensa.BD.Datos.Entidades;
+
+<a class="btn btn primary" href="Empleados/agregar">Nuevo empleado</a>
+
+
+<h3>Lista de empleados</h3>
+
+
+<table>
+
+      <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>        
+        <th>Edad</th>
+
+      </tr>
+
+
+    
+      @if (empleados == null)
+      {
+        <tr>Cargando.......</tr>
+    
+      }
+      else if(empleados.Count==0)
+      {
+        <tr>No existen datos para cargar</tr>
+    
+      }
+      else        
+      {
+          @foreach(var elemento in empleados)
+          {
+              <tr>
+                  <td>@elemento.Nombre</td>
+                  <td>@elemento.Apellido</td>                  
+                  <td>@elemento.FechaNacimiento</td>
+                  <td>@elemento.NumeroTelefono</td>
+
+                  <td>
+                      <a class="btn btn primary" 
+                          href="Empleados/Editar/@elemento.Id">
+                          Editar
+                      </a>
+                  </td>>
+                  <td>
+                      <button class="btn btn-warning" @onclick="()=>Eliminar(elemento)"> 
+                          Borrar
+                      </button>
+                  </td>
+              </tr>
+          }
+      }
+</table>
+
+
+
+
+<a class="btn btn primary" href="Productos/agregar">Nuevo empleado</a>
+
+
+<h3>Lista de productos que posee el empleado</h3>
+
+
+<table>
+
+    <tr>
+
+        <th>NombreProducto</th>
+
+        <th>Descripcion</th>
+
+        <th>Vencimiento</th>
+
+        <th>Precio</th>
+
+    </tr>
+
+
+
+    @if (productos == null)
+    {
+        <tr>Cargando.......</tr>
+
+    }
+    else if (productos.Count == 0)
+    {
+        <tr>No existen datos para cargar</tr>
+
+    }
+    else
+    {
+        @foreach (var elemento in productos)
+        {
+            <tr>
+                <td>@elemento.NombreProducto}</td>
+                <td>@elemento.DescripcionProducto</td>
+                <td>@elemento.FechaVencimiento</td>
+                <td>@elemento.PrecioProducto</td>
+
+                <td>
+                </td>
+            </tr>
+        }
+    }
+</table>
+
+
+<Confirmacion @ref="funcionConfirmacion"
+              verCancelar="true"
+              verOk="true"
+              textOk="Aceptar"
+              Titulo="Borrar empleado"
+              onCancel="Cancelar"
+              onConfirm="Borrar">
+              <div>
+                  Está por borrar el empleado:  @EmpleadoBorrar.Id
+                  <br />
+                  ¿Está seguro que desea continuar?
+              </div>
+</Confirmacion>
+
+
+@code
+{
+    List<Empleado> empleados;
+
+
+    List<Producto> productos;
+
+
+    Confirmacion funcionConfirmacion;
+
+    Empleado EmpleadoBorrar;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await base.OnInitializedAsync();
+
+        await LeerEmpleados();
+
+    }
+
+    private async Task LeerEmpleados()
+    {
+
+        var respuesta = await http.Get<List<Empleado>>("api/Empleados");
+        {
+            if (!respuesta.Error)
+            {
+                empleados = respuesta.Respuesta;
+            }
+        }
+    }
+
+
+    private async Task LeerProductos()
+    {
+
+        var respuesta = await http.Get<List<Producto>>("api/Productos");
+        {
+            if (!respuesta.Error)
+            {
+                productos = respuesta.Respuesta;
+            }
+        }
+    }
+
+
+    private void Eliminar(Empleado empleadoBorrar)
+    {
+        EmpleadoBorrar = empleadoBorrar;
+        funcionConfirmacion.Ver();
+    }
+
+       private void Cancelar()
+    {
+        funcionConfirmacion.Ocultar();
+        EmpleadoBorrar = null;
+    }
+
+
+    private async Task Borrar()
+    {
+
+        var respuesta = await http.Delete($"api/Empleados/{EmpleadoBorrar.Id}");
+
+        if(respuesta.Error)
+        {
+        }
+        Cancelar();
+        await LeerEmpleados();
+
+    }
+
+
+}

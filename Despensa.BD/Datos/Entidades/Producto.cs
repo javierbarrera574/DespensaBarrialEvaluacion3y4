@@ -33,12 +33,5 @@ namespace Despensa.BD.Datos.Entidades
 
      
         public Categoria Categoria { get; set; }
-
-   
-        public int DepositoId { get; set; }
-
-        public Deposito Deposito { get; set; }
-
-
     }
 }

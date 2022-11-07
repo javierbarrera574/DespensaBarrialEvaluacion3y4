@@ -56,8 +56,6 @@
 
                 <td>@item.NumeroTelefono</td>
 
-                <td>@item.Administrador.Nombre</td>
-
                 <td>
                     <a class="btn btn-primary"
                href="Proveedores/Editar/@item.Id">
@@ -79,9 +77,9 @@
       <br />
 
 
-     <h3>Lista de Proveedores del administrador</h3>
+     <h3>Lista de productos del proveedor</h3>
 
-       <a class="btn btn-primary" href="Administrador/Crear">Proveedores del administrador</a>
+              <a class="btn btn-primary" href="Productos/Crear">Lista productos</a>
 
         <br />
          <br />
@@ -91,32 +89,39 @@
 <table>
     <tr>
 
-        <th>Nombre</th>
+        <th>Nombre Producto</th>
 
+        <th>Descripcion</th>
 
-        <th>Apellido</th>
+        <th>Fecha vencimiento</th>
+
+        <th>Precio</th>
 
 
 
     </tr>
 
-    @if (administradores == null)
+    @if (productos == null)
     {
         <tr>Cargando.......</tr>
     }
-    else if (administradores.Count == 0)
+    else if (productos.Count == 0)
     {
         <tr>No existen datos</tr>
     }
     else
     {
-        @foreach (var item in administradores)
+        @foreach (var item in productos)
         {
             <tr>
 
-                <td>@item.Nombre</td>
+                <td>@item.NombreProducto</td>
 
-                <td>@item.NumeroTelefono</td>
+                <td>@item.DescripcionProducto</td>
+
+                <td>@item.FechaVencimiento</td>
+
+                <td>@item.PrecioProducto</td>
 
             </tr>
         }
@@ -144,7 +149,7 @@
 
     List<Proveedor> proveedores;
 
-    List<Administrador> administradores;
+    List<Producto> productos;
 
     Confirmacion confirmacion;
 
@@ -156,7 +161,7 @@
     {
         await base.OnInitializedAsync();
         await LeerProveedores();
-        await LeerAdministradores();
+        await LeerProductos();
     }
 
     private async Task LeerProveedores()
@@ -169,12 +174,12 @@
     }
 
 
-    private async Task LeerAdministradores()
+    private async Task LeerProductos()
     {
-        var respuesta = await http.Get<List<Administrador>>("api/Administradores");
+        var respuesta = await http.Get<List<Producto>>("api/Productos");
         if (!respuesta.Error)
         {
-            administradores = respuesta.Respuesta;
+            productos = respuesta.Respuesta;
         }
     }
 

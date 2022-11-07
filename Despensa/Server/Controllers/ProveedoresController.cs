@@ -23,7 +23,7 @@ namespace Despensa.Server.Controllers
         {
 
             var respuesta = await context.Proveedores.
-                Include(i => i.Administrador).
+                Include(i => i.Producto).
                 ToListAsync();
             return respuesta;
 
@@ -116,8 +116,7 @@ namespace Despensa.Server.Controllers
 
             var proveedor = await context.Proveedores.
                 Where(x => x.Id == id).
-                Include(x =>x.Productos).
-                Include(p=>p.Administrador).
+                Include(x =>x.Producto).
                 FirstOrDefaultAsync();
 
             if (proveedor is null)
